@@ -1,0 +1,603 @@
+html, body {
+	color: var(--defaultBaseTextColor);
+	width: 100%;
+	margin: 0;
+	background-color: var(--defaultBaseBackgroundColor) !important;
+	font-size: 14pt;
+}
+
+a {
+	color: var(--elementAnchorTextColor) !important;
+}
+
+:root {
+	color-scheme: dark;
+	--empty: #00000000;
+	--baseFontSize: calc(50% + min(1vw, 30px));
+}
+
+#popupManager_popupBackground {
+	background: var(--popupBackgroundDarkenColor) !important;
+}
+#popupManager_popup {
+	border-color: var(--popupBorderColor) !important;
+	background: var(--popupBackgroundColor) !important;
+}
+#popupManager_popupButtonContainer {
+	background: var(--popupButtonContainerBackgroundColor) !important;
+}
+#popupManager_popupButtonContainer button {
+	color: var(--popupButtonTextColor) !important;
+	background-color: var(--popupButtonBackgroundColor) !important;
+}
+
+#backgroundelement {
+	background: var(--defaultBaseBackgroundColor);
+	position: fixed;
+	display: block;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -32767;
+}
+#loader {
+	pointer-events: all;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
+	opacity: 1;
+	transition: opacity 0.15s;
+	transition-delay: opacity 0.25s;
+	-webkit-transition: opacity 0.15s;
+	-webkit-transition-delay: opacity 0.25s;
+	background: var(--loaderBackgroundColor);
+}
+#loader.hide {
+	pointer-events: none;
+	touch-action: none;
+	opacity: 0;
+	transition: opacity 0.15s;
+	transition-delay: opacity 0.25s;
+	-webkit-transition: opacity 0.15s;
+	-webkit-transition-delay: opacity 0.25s;
+}
+#page {
+	pointer-events: none;
+	touch-action: none;
+	opacity: 0;
+	transition: opacity 0.15s;
+	transition-delay: opacity 0.5s;
+	-webkit-transition: opacity 0.15s;
+	-webkit-transition-delay: opacity 0.5s;
+}
+#page.show {
+	pointer-events: all;
+	touch-action: auto;
+	opacity: 1;
+	transition: opacity 0.15s;
+	transition-delay: opacity 0.5s;
+	-webkit-transition: opacity 0.15s;
+	-webkit-transition-delay: opacity 0.5s;
+}
+.loaderText {
+	font-size: 30px;
+	text-align: center;
+	max-width: 80%;
+}
+#loaderTip {
+	position: fixed;
+	bottom: 5%;
+	text-align: center;
+	width: max-content;
+	max-width: 80%;
+}
+@media all and (max-device-width: 500px){
+	.loaderText {
+		font-size: 25px;
+	}
+	#container {
+		zoom: min(100%, calc(100% / 1.25));
+	}
+	body {
+		overflow-x: hidden;
+	}
+}
+#loaderBar {
+	width: 80%;
+	max-width: 500px;
+	background-color: var(--loaderBarBackgroundColor);
+	height: 20px;
+	margin-top: 40px;
+	border-radius: 500px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-content: center;
+	justify-content: flex-start;
+	align-items: stretch;
+	overflow: hidden;
+}
+#loaderBarFill {
+	background: var(--loaderBarFillColor);
+	height: 100%;
+	width: 0%;
+	/*transition: 0.15s;*/
+}
+
+#container {
+	margin: 25px;
+}
+div.title {
+	font-weight: 900;
+	font-size: 30px;
+}
+
+#hidden {
+	opacity: 0;
+	display: none;
+	visibility: hidden;
+}
+
+#mainform form {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-content: flex-start;
+	justify-content: flex-start;
+	align-items: flex-start;
+	width: max-content;
+	background: var(--canvasOptionsBackgroundColor);
+	padding: 20px 25px;
+	border-radius: 15px;
+}
+#mainform form span.heading {
+	font-size: 22px;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+#mainform form label {
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: space-between;
+	align-content: center;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	font-size: 14px;
+}
+#mainform form label div {
+	margin-left: 20px;
+}
+
+#canvasContainer {
+	width: 512px;
+	height: 512px;
+	max-width: 100%;
+	overflow: auto;
+	position: relative;
+	border: solid 4px var(--canvasContainerBorderColor);
+	border-radius: 12px;
+}
+
+@keyframes pulse {
+	0%{background:#ff000000;}
+	50%{background:#ff000033;}
+	100%{background:#ff000000;}
+}
+#canvasContainer div[class^="hitbox-"] {
+	position: absolute;
+	opacity: 0;
+	z-index: 999;
+	outline: var(--canvasHitboxOutlineInactiveColor) solid 4px;
+	outline-offset: -4px;
+	/* border-radius: 10px; */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	align-content: center;
+	flex-wrap: nowrap;
+	flex-direction: row;
+	color: white;
+	text-align: center;
+}
+#canvasContainer div[class^="hitbox-"]:hover {
+	outline: var(--canvasHitboxOutlineActiveColor) solid 4px;
+	opacity: 0.5;
+	/* animation: pulse 1.25s linear infinite; */
+}
+canvas#main {
+	background-image: linear-gradient(to right, var(--canvasTransparencyColor1), var(--canvasTransparencyColor1)), linear-gradient(to right, #555 50%, var(--canvasTransparencyColor2) 50%), linear-gradient(to bottom, #555 50%, var(--canvasTransparencyColor2) 50%);
+	background-blend-mode: normal, difference, normal;
+	background-size: 32px 32px;
+}
+
+#mainmenucontainer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: var(--empty);
+	width: 100%;
+	display: block;
+	z-index: 5000;
+	height: max-content;
+}
+#mainmenu {
+	padding: 25px;
+	background: var(--empty);
+	width: calc(90vw - 50px);
+	display: block;
+	max-width: 700px;
+	z-index: 5000;
+	height: max-content;
+}
+
+p {
+	display: block;
+	margin-block-start: 1em;
+	margin-block-end: 1em;
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	font-size: 14pt;
+}
+
+h2 {
+	display: block;
+	font-size: 24pt;
+	margin-block-start: 0.83em;
+	margin-block-end: 0.83em;
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	font-weight: bold;
+}
+
+select {
+	border-color: var(--elementSelectBorderColor);
+	border-width: 1px;
+	border-style: solid;
+	border-image: initial;
+	border-radius: 2px;
+	background-color: var(--elementSelectBackgroundColor);
+	font-size: 12pt;
+}
+
+input:not([type="file"]) {
+	outline: none;
+	border-color: var(--elementInputBorderColor);
+	border-width: 1px;
+	border-style: solid;
+	border-image: initial;
+	border-radius: 2px;
+	background-color: var(--elementInputBackgroundColor);
+	font-size: 12pt;
+}
+
+button, select, option, input {
+	outline: none;
+	color: var(--elementGenericTextColor);
+}
+option {
+	background: var(--elementOptionBackgroundColor);
+}
+
+button {
+	background-color: var(--elementButtonBackgroundColor);
+	margin: 0em;
+	padding: 1px 6px;
+	border-width: 2px;
+	border-style: solid;
+	border-color: var(--elementButtonBorderColor);
+	border-image: initial;
+	border-radius: 2px;
+	font-size: 12pt;
+}
+button:hover {
+	background-color: var(--elementButtonHoverBackgroundColor);
+}
+button:active {
+	background-color: var(--elementButtonActiveBackgroundColor);
+}
+
+input {
+	color: var(--elementGenericTextColor);
+	font-size: 12pt;
+}
+
+input::file-selector-button {
+	color: var(--elementGenericTextColor);
+	background: var(--elementInputFileButtonBackgroundColor) !important;
+	margin: 0px 4px 0px 0px !important;
+	padding: 1px 6px !important;
+	border-width: 2px !important;
+	border-style: solid !important;
+	border-color: var(--elementInputFileButtonBorderColor) !important;
+	border-image: initial !important;
+	border-radius: 2px !important;
+}
+
+input::placeholder {
+	color: var(--elementGenericTextColor);
+	opacity: 0.5;
+}
+
+#spritesheetControls {
+	margin-right: 40px;
+}
+
+#widthController {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	max-width: max-content;
+	flex-wrap: wrap;
+}
+
+
+@media screen and (max-width: 700px) {
+	#container {
+		zoom: 0.75;
+	}
+	.jscolor-wrap {
+		position: fixed;
+		top: 0 !important;
+		right: 0 !important;
+		left: auto !important;
+	}
+}
+
+@media screen and (max-width: 430px) {
+	#container {
+		zoom: 0.65;
+	}
+}
+
+@media screen and (max-width: 475px) {	
+	#obstaclePreviewMenu .closeButton img {
+		width: 40px;
+	}
+	#obstaclePreviewMenu .sidepanel .panel label, #obstaclePreviewMenu .sidepanel .panel label select {
+		font-size: 12px;
+	}
+}
+
+@media screen and (max-width: 360px) {
+	#container {
+		zoom: 0.6;
+	}
+}
+
+@media screen and (max-width: 395px) {	
+	#obstaclePreviewMenu .closeButton img {
+		width: 30px;
+	}
+	#obstaclePreviewMenu .sidepanel .panel label, #obstaclePreviewMenu .sidepanel .panel label select {
+		font-size: 10px;
+	}
+}
+
+@keyframes processingDotsAnim1 {
+	0% {
+		content: '';
+	}
+	20% {
+		content: '.';
+	}
+	40% {
+		content: '..';
+	}
+	60% {
+		content: '...';
+	}
+	80% {
+		content: '..';
+	}
+	100% {
+		content: '.';
+	}
+}
+#processingDots.active::after {
+	content: '';
+	display: inline-block;
+	animation: processingDotsAnim1 1s infinite linear;
+}
+
+#obstaclePreviewMenu {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	user-select: none;
+	z-index: 32768;
+}
+
+#obstaclePreviewMenu .sidepanel {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: max-content;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	align-content: flex-start;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: flex-start;
+	z-index: 2;
+}
+
+#obstaclePreviewMenu .closeButton {
+	position: fixed;
+	top: 0;
+	right: 0;
+	margin: 30px;
+	padding: 0;
+	background: transparent;
+	outline: none;
+	border: none;
+	z-index: 3;
+	filter: hue-rotate(var(--obstaclePreviewCloseButtonHue));
+	-webkit-filter: hue-rotate(var(--obstaclePreviewCloseButtonHue));
+}
+
+#obstaclePreviewMenu .closeButton img {
+	width: 50px;
+}
+
+#obstaclePreviewMenu .sidepanel .panel {
+	padding: 20px;
+	background: var(--obstaclePreviewMenuSidePanelBackground);
+	width: max-content;
+	border-radius: 10px;
+	margin: 15px;
+	font-size: 17px;
+}
+
+#obstaclePreviewCanvas {
+	touch-action: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: var(--obstaclePreviewCanvasBackgroundColor);
+	backdrop-filter: blur(10px);
+	--webkit-backdrop-filter: blur(10px);
+	z-index: 1;
+}
+
+#obstaclePreviewTypeSelect {
+	margin-left: 10px;
+}
+
+#loadLabel {
+	color: var(--loaderTimeLabelColor);
+	font-family: 'bold' !important;
+}
+
+#changelog {
+	background: var(--changelogBackgroundColor);
+	border-radius: 15px;
+	padding: 20px;
+	width: 90%;
+	max-width: 77vw;
+}
+
+#changelog span {
+	color: var(--changelogTitleColor);
+	font-family: 'bold' !important;
+	text-decoration: underline;
+}
+#changelog ul {
+	color: var(--changelogTextColor);
+	margin: 12px 0 0 0;
+}
+
+div#collectionmanagermenu {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 32767;
+}
+div#collectionmanagermenubackground {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: var(--popupBackgroundDarkenColor);
+	backdrop-filter: blur(3px);
+	--webkit-backdrop-filter: blur(3px);
+}
+div#collectionmanagermenucontent {
+	position: absolute;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-content: center;
+	justify-content: flex-start;
+	align-items: center;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+}
+button.collectionmanagermenuclose {
+	position: fixed;
+	right: 10px;
+	top: 10px;
+	z-index: 5000;
+	background: #00000000;
+	border: none;
+}
+button.collectionmanagermenuclose > img {
+	width: 50px;
+	height: 50px;
+}
+div.collectionItem {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	align-content: center;
+	flex-wrap: nowrap;
+	background: var(--jscolorElementBackgroundColor);
+	border: solid 1px var(--elementButtonBorderColor);
+	color: var(--elementGenericTextColor);
+	padding: 20px;
+	margin: 20px;
+	margin-bottom: 0;
+	border-radius: 10px;
+}
+div.collectionItem:last-child {
+	margin-bottom: 20px;
+}
+div.collectionItem > div {
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
+}
+div.collectionItem > div > input {
+	width: 200px;
+	text-align: center;
+}
+div.collectionItem > div:last-child {
+	position: relative;
+	margin: 10px 0;
+	margin-bottom: 0;
+	padding: 10px 0px;
+	border-radius: 10px;
+	width: 100%;
+	background: var(--elementButtonBackgroundColor);
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+}
+div.collectionItem > div:last-child > button {
+	padding: 5px;
+}
+div.collectionItem > div:last-child > button > img {
+	width: 30px;
+	height: 30px;
+}
+div.collectionItem > div > img {
+	width: 128px;
+	height: 128px;
+	margin: 15px 0;
+}
+
+div#container.collection .hideOnCollection {
+	display: none;
+}
